@@ -1,17 +1,34 @@
-const Gameobard =(function() {
-    const rows=3
-    const cols=3
-    const gameboard=[]
-
+function Gameboard() {
+    const rows = 3;
+    const columns = 3;
+    const board = [];
+  
+    
     for (let i = 0; i < rows; i++) {
-        gameboard[i] = []; 
-        for (let j = 0; j < cols; j++) {
-          gameboard[i][j] = 0; 
-        }
+      board[i] = [];
+      for (let j = 0; j < columns; j++) {
+        board[i].push(Cell());
+      }
+    }
+
+    function cell(row, column) {
+        return board[row][column];
       }
 
-      console.log(gameboard);
-})();
+      function markCell(row, column, player) {
+        const chosenCell = cell(row, column);
+        chosenCell.addToken(player);
+      }
+
+
+      const printBoard = () => {
+        const boardWithCellValues = board.map((row) => row.map((cell) => cell.getValue()))
+        console.log(boardWithCellValues);
+      };
+      return{
+        cell, markCell, printBoard
+      };
+}
 
 function Player(name, sign){
     this.name= name;
@@ -33,6 +50,8 @@ console.log(player2);
 
 
 const flow = {
+
+    
 
 };
 
