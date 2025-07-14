@@ -30,28 +30,82 @@ function Gameboard() {
       };
 }
 
-function Player(name, sign){
-    this.name= name;
-    const1 = 'X';
-    const2 = 'O';
-    if (sign===const1){
-        return {name,const1};
-    }
-    else{
-        return {name,const2};
-    }
-
-}
-
-const player1= new Player("Rabo", 'X');
-const player2 = new Player("Duca", 'O');
-console.log(player1);
-console.log(player2);
-
-
-const flow = {
-
+function Cell() {
+    let value = 0;
+  
     
+    const addToken = (player) => {
+      value = player;
+    };
+  
+    
+    const getValue = () => value;
+  
+    return {
+      addToken,
+      getValue
+    };
+  }
 
-};
+  function gameController(){
+
+ 
+    const board = Gameboard(); // pozivaš svoj board
+    let currentPlayer = "X";
+    let winner = null;
+  
+    function checkWinner() {
+      const winningCombinations = [
+        [ [0, 0], [0, 1], [0, 2] ],
+        [ [1, 0], [1, 1], [1, 2] ],
+        [ [2, 0], [2, 1], [2, 2] ],
+        [ [0, 0], [1, 0], [2, 0] ],
+        [ [0, 1], [1, 1], [2, 1] ],
+        [ [0, 2], [1, 2], [2, 2] ],
+        [ [0, 0], [1, 1], [2, 2] ],
+        [ [0, 2], [1, 1], [2, 0] ],
+      ];
+  
+      for (const combination of winningCombinations) {
+        const [a, b, c] = combination;
+  
+        const valA = board.cell(a[0], a[1]).getValue();
+        const valB = board.cell(b[0], b[1]).getValue();
+        const valC = board.cell(c[0], c[1]).getValue();
+  
+        if (valA !== 0 && valA === valB && valB === valC) {
+          return valA;
+        }
+      }
+  
+      return null;
+    }
+    function switchPlayer(){
+      currentPlayer = currentPlayer === "X" ? "O" : "X";
+    }
+
+    function playRound(row,column){
+      const selectedCell=board.cell(row,column);
+
+      if(selectedCell.getValue() !==0 || winner)
+        return;
+
+      selectedCell.addToken(currentPlayer);
+    
+      const result=checkWinner();
+      if(result){
+        winner=result;
+        console.log(`Player ${winner} wins!`);
+        return;
+      }
+      switchPlayer();
+    }
+    
+    return {
+      playRound,
+      getCurrentPlayer: () => currentPlayer,
+      getBoard: () => board
+    };
+   
+  }
 
